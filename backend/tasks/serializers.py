@@ -15,7 +15,6 @@ class TaskSerializer(serializers.ModelSerializer):
             "priority",
             "due_date",
             "completed",
-            "location",
             "created_at",
             "updated_at",
         ]
@@ -42,7 +41,3 @@ class TaskSerializer(serializers.ModelSerializer):
             )
         return value
 
-    def validate_location(self, value):
-        if value:
-            return value.strip()
-        return value

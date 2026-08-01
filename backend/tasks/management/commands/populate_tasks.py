@@ -13,7 +13,6 @@ SAMPLE_TASKS = [
         "priority": "high",
         "completed": False,
         "days_offset": 3,
-        "location": "San Francisco",
     },
     {
         "title": "Fix login page responsive issues",
@@ -21,7 +20,6 @@ SAMPLE_TASKS = [
         "priority": "high",
         "completed": False,
         "days_offset": 1,
-        "location": "",
     },
     {
         "title": "Prepare slides for client demo",
@@ -29,7 +27,6 @@ SAMPLE_TASKS = [
         "priority": "medium",
         "completed": False,
         "days_offset": 5,
-        "location": "London",
     },
     {
         "title": "Update API documentation",
@@ -37,7 +34,6 @@ SAMPLE_TASKS = [
         "priority": "medium",
         "completed": True,
         "days_offset": -2,
-        "location": "",
     },
     {
         "title": "Set up CI/CD pipeline",
@@ -45,7 +41,6 @@ SAMPLE_TASKS = [
         "priority": "high",
         "completed": False,
         "days_offset": 7,
-        "location": "",
     },
     {
         "title": "Refactor user authentication module",
@@ -53,7 +48,6 @@ SAMPLE_TASKS = [
         "priority": "medium",
         "completed": False,
         "days_offset": 10,
-        "location": "",
     },
     {
         "title": "Design new dashboard widgets",
@@ -61,7 +55,6 @@ SAMPLE_TASKS = [
         "priority": "low",
         "completed": False,
         "days_offset": 14,
-        "location": "New York",
     },
     {
         "title": "Conduct code review for PR #142",
@@ -69,7 +62,6 @@ SAMPLE_TASKS = [
         "priority": "high",
         "completed": False,
         "days_offset": 0,
-        "location": "",
     },
     {
         "title": "Write unit tests for weather service",
@@ -77,7 +69,6 @@ SAMPLE_TASKS = [
         "priority": "medium",
         "completed": True,
         "days_offset": -5,
-        "location": "",
     },
     {
         "title": "Optimize database queries",
@@ -85,7 +76,6 @@ SAMPLE_TASKS = [
         "priority": "medium",
         "completed": False,
         "days_offset": -1,
-        "location": "",
     },
     {
         "title": "Plan team retrospective meeting",
@@ -93,7 +83,6 @@ SAMPLE_TASKS = [
         "priority": "low",
         "completed": False,
         "days_offset": 6,
-        "location": "Tokyo",
     },
     {
         "title": "Migrate static assets to CDN",
@@ -101,7 +90,6 @@ SAMPLE_TASKS = [
         "priority": "low",
         "completed": False,
         "days_offset": 20,
-        "location": "",
     },
     {
         "title": "Investigate memory leak in worker process",
@@ -109,7 +97,6 @@ SAMPLE_TASKS = [
         "priority": "high",
         "completed": False,
         "days_offset": -3,
-        "location": "",
     },
     {
         "title": "Update dependencies to latest LTS",
@@ -117,7 +104,6 @@ SAMPLE_TASKS = [
         "priority": "low",
         "completed": True,
         "days_offset": -10,
-        "location": "",
     },
     {
         "title": "Create onboarding guide for new hires",
@@ -125,7 +111,6 @@ SAMPLE_TASKS = [
         "priority": "medium",
         "completed": False,
         "days_offset": 8,
-        "location": "Berlin",
     },
 ]
 
@@ -155,7 +140,6 @@ class Command(BaseCommand):
                     "priority": sample["priority"],
                     "completed": sample["completed"],
                     "due_date": due_date,
-                    "location": sample["location"],
                 },
             )
             if created:

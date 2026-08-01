@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Task(models.Model):
-    """A single task item with priority, due date, and optional location."""
+    """A single task item with priority and due date."""
 
     PRIORITY_LOW = "low"
     PRIORITY_MEDIUM = "medium"
@@ -22,12 +22,6 @@ class Task(models.Model):
     )
     due_date = models.DateField(null=True, blank=True)
     completed = models.BooleanField(default=False)
-    location = models.CharField(
-        max_length=255,
-        blank=True,
-        default="",
-        help_text="City name for weather lookup (optional)",
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

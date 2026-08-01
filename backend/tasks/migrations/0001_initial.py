@@ -20,7 +20,6 @@ class Migration(migrations.Migration):
                 ('priority', models.CharField(choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], default='medium', max_length=10)),
                 ('due_date', models.DateField(blank=True, null=True)),
                 ('completed', models.BooleanField(default=False)),
-                ('location', models.CharField(blank=True, default='', help_text='City name for weather lookup (optional)', max_length=255)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
