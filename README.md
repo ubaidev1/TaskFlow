@@ -1,6 +1,6 @@
 # TaskFlow
 
-A full-stack task management application built with **React** (frontend) and **Django + Django REST Framework** (backend). Features a clean, modern UI with dark/light mode, task priorities, due dates with overdue highlighting, pagination, a stats dashboard, and live weather integration via OpenWeather API.
+A full-stack task management application built with **React** (frontend) and **Django + Django REST Framework** (backend). Features a clean, modern UI with dark/light mode, task priorities, due dates with overdue highlighting, pagination, a stats dashboard, and a dedicated weather section powered by the free OpenWeather APIs.
 
 ## Tech Stack
 
@@ -58,7 +58,7 @@ TaskFlow/
 │           ├── TaskForm.jsx
 │           ├── Pagination.jsx
 │           ├── ConfirmDialog.jsx
-│           └── WeatherWidget.jsx
+│           └── WeatherSection.jsx
 └── README.md
 ```
 
@@ -69,7 +69,7 @@ TaskFlow/
 - Python 3.10+
 - Node.js 18+
 - PostgreSQL 14+
-- An OpenWeather API key (get one free at https://openweathermap.org/api)
+- An OpenWeather API key (free tier is sufficient — get one at https://openweathermap.org/api)
 
 ### Backend
 
@@ -162,7 +162,7 @@ TaskFlow/
 | Variable               | Required | Description                                      |
 |------------------------|----------|--------------------------------------------------|
 | `SECRET_KEY`           | Yes      | Django secret key                                |
-| `OPENWEATHER_API_KEY`  | Yes      | OpenWeather API key for weather feature          |
+| `OPENWEATHER_API_KEY`  | Yes      | OpenWeather API key (free tier works)              |
 | `DB_NAME`              | Yes      | PostgreSQL database name                         |
 | `DB_USER`              | Yes      | PostgreSQL database user                         |
 | `DB_PASSWORD`          | Yes      | PostgreSQL database password                     |
@@ -180,7 +180,7 @@ TaskFlow/
 | PATCH  | `/api/tasks/<id>/`          | Partially update a task                  |
 | DELETE | `/api/tasks/<id>/`          | Delete a task                            |
 | GET    | `/api/tasks/stats/`         | Task statistics (total/completed/pending/overdue) |
-| GET    | `/api/weather/?city=<name>` | Current weather for a city               |
+| GET    | `/api/weather/?city=<name>` | Current weather + 5-day forecast for a city |
 
 ## Database Schema
 
@@ -194,7 +194,6 @@ TaskFlow/
 | `priority`    | CharField(10) | `low`, `medium`, or `high` (default: medium) |
 | `due_date`    | DateField     | Optional, nullable                       |
 | `completed`   | BooleanField  | Default: false                           |
-| `location`    | CharField(255)| Optional, city name for weather lookup   |
 | `created_at`  | DateTimeField | Auto-set on creation                     |
 | `updated_at`  | DateTimeField | Auto-set on update                       |
 
@@ -206,5 +205,5 @@ TaskFlow/
 - **Dark/light mode:** Toggle with smooth CSS transitions, persisted via localStorage
 - **Pagination:** 10 tasks per page with clean pagination controls
 - **Stats dashboard:** Total, completed, pending, and overdue task counts
-- **Weather integration:** Enter a city when creating/editing a task to see live weather on the task card
+- **Weather section:** Search any city to see current conditions, details (humidity, wind, pressure, visibility), sun times, and a 5-day forecast — powered by free OpenWeather APIs
 - **Responsive design:** Works on mobile, tablet, and desktop

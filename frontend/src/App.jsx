@@ -7,6 +7,7 @@ import TaskCard from "./components/TaskCard.jsx";
 import TaskForm from "./components/TaskForm.jsx";
 import Pagination from "./components/Pagination.jsx";
 import ConfirmDialog from "./components/ConfirmDialog.jsx";
+import WeatherSection from "./components/WeatherSection.jsx";
 import { useTheme } from "./hooks/useTheme.js";
 import {
   fetchTasks,
@@ -116,109 +117,122 @@ function App() {
     <div className="min-h-screen" style={{ backgroundColor: "var(--bg-primary)" }}>
       <Header theme={theme} onToggleTheme={toggleTheme} />
 
-      <main className="mx-auto w-full max-w-4xl px-3 py-6 sm:px-6 sm:py-10">
-        {/* Stats */}
-        <StatsWidget stats={stats} loading={statsLoading} />
+      <main className="mx-auto w-full max-w-7xl px-3 py-6 sm:px-6 sm:py-8">
+        {/* Two-column layout: tasks left, weather right */}
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+          {/* Left column — Stats + Tasks */}
+          <div className="min-w-0 flex-1">
+            {/* Stats — aligned with tasks */}
+            <StatsWidget stats={stats} loading={statsLoading} />
 
-        {/* Task list header */}
-        <div className="mb-4 mt-6 flex items-center justify-between gap-3 sm:mb-5 sm:mt-8">
-          <div className="min-w-0">
-            <h2 className="text-base font-bold tracking-tight sm:text-lg" style={{ color: "var(--text-primary)" }}>
-              {count > 0 ? `${count} ${count === 1 ? "Task" : "Tasks"}` : "Tasks"}
-            </h2>
-            <p className="mt-0.5 text-xs sm:text-sm" style={{ color: "var(--text-muted)" }}>
-              {count > 0 ? "Manage your work efficiently" : "Create your first task to get started"}
-            </p>
-          </div>
-          <button
-            onClick={openAddForm}
-            className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-95 sm:px-4 sm:py-2.5"
-            style={{
-              background: "var(--gradient-accent)",
-              boxShadow: "var(--shadow-md)",
-            }}
-          >
-            <Plus className="h-4 w-4" strokeWidth={2.5} />
-            <span className="hidden sm:inline">New Task</span>
-            <span className="sm:hidden">Add</span>
-          </button>
-        </div>
+            {/* Task list header */}
+            <div className="mb-3 mt-5 flex items-center justify-between gap-3 sm:mb-4 sm:mt-6">
+              <div className="min-w-0">
+                <h2 className="text-base font-bold tracking-tight sm:text-lg" style={{ color: "var(--text-primary)" }}>
+                  {count > 0 ? `${count} ${count === 1 ? "Task" : "Tasks"}` : "Tasks"}
+                </h2>
+                <p className="mt-0.5 text-xs sm:text-sm" style={{ color: "var(--text-muted)" }}>
+                  {count > 0 ? "Manage your work efficiently" : "Create your first task to get started"}
+                </p>
+              </div>
+              <button
+                onClick={openAddForm}
+                className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-95 sm:px-4 sm:py-2.5"
+                style={{
+                  background: "var(--gradient-accent)",
+                  boxShadow: "var(--shadow-md)",
+                }}
+              >
+                <Plus className="h-4 w-4" strokeWidth={2.5} />
+                <span className="hidden sm:inline">New Task</span>
+                <span className="sm:hidden">Add</span>
+              </button>
+            </div>
 
-        {/* Error banner */}
-        {error && (
-          <div
-            className="mb-4 flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm"
-            style={{
-              backgroundColor: isDark ? "rgba(239,68,68,0.1)" : "rgba(239,68,68,0.06)",
-              borderColor: "rgba(239,68,68,0.2)",
-              color: isDark ? "#f87171" : "#dc2626",
-            }}
-          >
-            <Info className="h-4 w-4 shrink-0" />
-            {error}
-          </div>
-        )}
-
-        {/* Task list */}
-        {loading ? (
-          <div className="space-y-2.5">
-            {[0, 1, 2, 3].map((i) => (
+            {/* Error banner */}
+            {error && (
               <div
-                key={i}
-                className="h-20 animate-pulse rounded-xl border"
+                className="mb-3 flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm sm:mb-4"
+                style={{
+                  backgroundColor: isDark ? "rgba(239,68,68,0.1)" : "rgba(239,68,68,0.06)",
+                  borderColor: "rgba(239,68,68,0.2)",
+                  color: isDark ? "#f87171" : "#dc2626",
+                }}
+              >
+                <Info className="h-4 w-4 shrink-0" />
+                {error}
+              </div>
+            )}
+
+            {/* Task list */}
+            {loading ? (
+              <div className="space-y-2.5">
+                {[0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="h-20 animate-pulse rounded-xl border"
+                    style={{
+                      backgroundColor: "var(--bg-secondary)",
+                      borderColor: "var(--border-color)",
+                    }}
+                  />
+                ))}
+              </div>
+            ) : tasks.length === 0 ? (
+              <div
+                className="flex flex-col items-center justify-center rounded-2xl border px-4 py-12 text-center sm:py-20"
                 style={{
                   backgroundColor: "var(--bg-secondary)",
                   borderColor: "var(--border-color)",
                 }}
-              />
-            ))}
-          </div>
-        ) : tasks.length === 0 ? (
-          <div
-            className="flex flex-col items-center justify-center rounded-2xl border px-4 py-12 text-center sm:py-20"
-            style={{
-              backgroundColor: "var(--bg-secondary)",
-              borderColor: "var(--border-color)",
-            }}
-          >
-            <div
-              className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl sm:h-14 sm:w-14"
-              style={{ background: "var(--accent-light)" }}
-            >
-              <ClipboardList className="h-6 w-6 sm:h-7 sm:w-7" style={{ color: "var(--accent)" }} strokeWidth={2} />
-            </div>
-            <p className="text-sm font-bold sm:text-base" style={{ color: "var(--text-primary)" }}>
-              No tasks yet
-            </p>
-            <p className="mt-1 text-xs sm:text-sm" style={{ color: "var(--text-muted)" }}>
-              Click "New Task" to create your first one
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-2.5">
-            {tasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                isDark={isDark}
-                onEdit={openEditForm}
-                onDelete={setDeletingTask}
-                onToggleComplete={handleToggleComplete}
-              />
-            ))}
-          </div>
-        )}
+              >
+                <div
+                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl sm:h-14 sm:w-14"
+                  style={{ background: "var(--accent-light)" }}
+                >
+                  <ClipboardList className="h-6 w-6 sm:h-7 sm:w-7" style={{ color: "var(--accent)" }} strokeWidth={2} />
+                </div>
+                <p className="text-sm font-bold sm:text-base" style={{ color: "var(--text-primary)" }}>
+                  No tasks yet
+                </p>
+                <p className="mt-1 text-xs sm:text-sm" style={{ color: "var(--text-muted)" }}>
+                  Click "New Task" to create your first one
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {tasks.map((task) => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    isDark={isDark}
+                    onEdit={openEditForm}
+                    onDelete={setDeletingTask}
+                    onToggleComplete={handleToggleComplete}
+                  />
+                ))}
+              </div>
+            )}
 
-        {/* Pagination */}
-        {!loading && totalPages > 1 && (
-          <div className="mt-6 sm:mt-8">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+            {/* Pagination */}
+            {!loading && totalPages > 1 && (
+              <div className="mt-6 sm:mt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Right column — Weather */}
+          <div className="lg:w-80 xl:w-80 lg:shrink-0">
+            <div className="lg:sticky lg:top-20">
+              <WeatherSection />
+            </div>
+          </div>
+        </div>
       </main>
 
       {/* Modals */}

@@ -9,7 +9,7 @@ export default function Header({ theme, onToggleTheme }) {
         borderColor: "var(--border-color)",
       }}
     >
-      <div className="mx-auto flex max-w-4xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3">
         <div className="flex items-center gap-2.5">
           <div
             className="flex h-9 w-9 items-center justify-center rounded-xl"
