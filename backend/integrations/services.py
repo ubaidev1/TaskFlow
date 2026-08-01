@@ -14,8 +14,8 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather"
-FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
+CURRENT_WEATHER_URL = f"{settings.OPENWEATHER_API_BASE_URL}/data/2.5/weather"
+FORECAST_URL = f"{settings.OPENWEATHER_API_BASE_URL}/data/2.5/forecast"
 
 
 class WeatherServiceError(Exception):

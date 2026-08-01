@@ -163,6 +163,7 @@ TaskFlow/
 |------------------------|----------|--------------------------------------------------|
 | `SECRET_KEY`           | Yes      | Django secret key                                |
 | `OPENWEATHER_API_KEY`  | Yes      | OpenWeather API key (free tier works)              |
+| `OPENWEATHER_API_BASE_URL` | No   | OpenWeather API base URL (default: https://api.openweathermap.org) |
 | `DB_NAME`              | Yes      | PostgreSQL database name                         |
 | `DB_USER`              | Yes      | PostgreSQL database user                         |
 | `DB_PASSWORD`          | Yes      | PostgreSQL database password                     |
