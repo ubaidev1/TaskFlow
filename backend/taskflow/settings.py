@@ -108,4 +108,3 @@ CORS_ALLOWED_ORIGINS = [
 
 # OpenWeather
 OPENWEATHER_API_KEY = os.environ.get("OPENWEATHER_API_KEY", "")
-OPENWEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather"
