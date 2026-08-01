@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from datetime import date
+
 from .models import Task
 
 
@@ -39,5 +41,10 @@ class TaskSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 f"Priority must be one of: {', '.join(valid)}."
             )
+        return value
+
+    def validate_due_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError("Due date cannot be in the past.")
         return value
 

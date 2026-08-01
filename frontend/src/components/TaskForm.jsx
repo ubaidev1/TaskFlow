@@ -11,6 +11,8 @@ const PRIORITIES = [
 ];
 
 export default function TaskForm({ task, onSave, onClose }) {
+  const today = new Date().toISOString().split("T")[0];
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -178,6 +180,7 @@ export default function TaskForm({ task, onSave, onClose }) {
                 name="due_date"
                 value={formData.due_date}
                 onChange={handleChange}
+                min={today}
                 className={inputClass}
                 style={inputStyle}
               />
