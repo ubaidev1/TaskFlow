@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Calendar, Check, Pencil, Trash2, MapPin, Clock, X } from "lucide-react";
+import { Calendar, Check, Pencil, Trash2, Clock, X } from "lucide-react";
 import { formatDate, isOverdue } from "../utils/date.js";
-import WeatherWidget from "./WeatherWidget.jsx";
 
 const PRIORITY = {
   low: { color: "#22c55e", label: "Low" },
@@ -160,16 +159,6 @@ export default function TaskCard({ task, onEdit, onDelete, onToggleComplete, isD
                 {formatDate(task.due_date)}
                 {overdue && <span className="font-bold">· Overdue</span>}
               </span>
-            )}
-
-            {task.location && (
-              <>
-                <span className="inline-flex items-center gap-1 text-xs" style={{ color: "var(--text-muted)" }}>
-                  <MapPin className="h-3.5 w-3.5" />
-                  {task.location}
-                </span>
-                <WeatherWidget city={task.location} />
-              </>
             )}
 
             {/* Priority badge — pushed to the right */}

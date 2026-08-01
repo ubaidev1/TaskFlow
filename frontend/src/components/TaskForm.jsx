@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, MapPin, PencilLine, Plus } from "lucide-react";
+import { X, PencilLine, Plus } from "lucide-react";
 
 const TITLE_MAX = 100;
 const DESC_MAX = 500;
@@ -16,7 +16,6 @@ export default function TaskForm({ task, onSave, onClose }) {
     description: "",
     priority: "medium",
     due_date: "",
-    location: "",
   });
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
@@ -30,7 +29,6 @@ export default function TaskForm({ task, onSave, onClose }) {
         description: task.description || "",
         priority: task.priority || "medium",
         due_date: task.due_date || "",
-        location: task.location || "",
       });
     }
   }, [task]);
@@ -182,27 +180,6 @@ export default function TaskForm({ task, onSave, onClose }) {
                 onChange={handleChange}
                 className={inputClass}
                 style={inputStyle}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
-              Location <span className="font-normal normal-case" style={{ color: "var(--text-muted)" }}>(weather)</span>
-            </label>
-            <div className="relative">
-              <MapPin
-                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                style={{ color: "var(--text-muted)" }}
-              />
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                className={`${inputClass} pl-9`}
-                style={inputStyle}
-                placeholder="e.g. London"
               />
             </div>
           </div>
