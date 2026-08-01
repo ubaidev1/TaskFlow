@@ -183,6 +183,87 @@ TaskFlow/
 | GET    | `/api/tasks/stats/`         | Task statistics (total/completed/pending/overdue) |
 | GET    | `/api/weather/?city=<name>` | Current weather + 5-day forecast for a city |
 
+## API Integrations
+
+This project integrates with the **OpenWeather API** to provide real-time weather data. The integration uses the free tier APIs — no paid subscription required.
+
+### OpenWeather Current Weather API
+
+- **URL:** `https://api.openweathermap.org/data/2.5/weather`
+- **Method:** `GET`
+- **Params:**
+
+  | Parameter | Required | Description                          |
+  |-----------|----------|--------------------------------------|
+  | `q`       | Yes      | City name (e.g., "London", "New York") |
+  | `appid`   | Yes      | OpenWeather API key                  |
+  | `units`   | Yes      | `metric` for Celsius                 |
+
+- **Returns:** City name, country, coordinates, current temperature, feels-like, humidity, pressure, wind speed/direction, cloud coverage, visibility, weather condition, description, icon code, sunrise, and sunset times.
+
+### OpenWeather 5-Day / 3-Hour Forecast API
+
+- **URL:** `https://api.openweathermap.org/data/2.5/forecast`
+- **Method:** `GET`
+- **Params:**
+
+  | Parameter | Required | Description                          |
+  |-----------|----------|--------------------------------------|
+  | `q`       | Yes      | City name                            |
+  | `appid`   | Yes      | OpenWeather API key                  |
+  | `units`   | Yes      | `metric` for Celsius                 |
+
+- **Returns:** List of 3-hour interval forecast entries for the next 5 days. The backend aggregates these into daily summaries (max 5 days) by grouping entries by date, picking the midday entry's weather condition, and calculating the overall min/max temperatures for each day.
+
+### Internal Weather Endpoint
+
+The backend wraps both OpenWeather API calls into a single endpoint:
+
+```
+GET /api/weather/?city=<city_name>
+```
+
+**Response format:**
+
+```json
+{
+  "city": "London",
+  "country": "GB",
+  "lat": 51.5085,
+  "lon": -0.1257,
+  "timezone": 0,
+  "current": {
+    "temperature": 15,
+    "feels_like": 14,
+    "humidity": 58,
+    "pressure": 1024,
+    "wind_speed": 3.5,
+    "wind_deg": 70,
+    "clouds": 0,
+    "visibility": 10000,
+    "condition": "Clear",
+    "description": "sky is clear",
+    "icon": "01d",
+    "sunrise": 1777437375,
+    "sunset": 1777490344
+  },
+  "forecast": [
+    {
+      "date": 1777460400,
+      "temp_max": 17,
+      "temp_min": 16,
+      "condition": "Clear",
+      "description": "sky is clear",
+      "icon": "01d"
+    }
+  ]
+}
+```
+
+### Configuration
+
+The API base URL and key are configured via environment variables (see [Environment Variables](#environment-variables)). The backend service layer (`integrations/services.py`) handles all API calls, error handling (401, 404, 429), and response formatting.
+
 ## Database Schema
 
 ### Task Model
@@ -200,11 +281,24 @@ TaskFlow/
 
 ## Features
 
+### Required Features (per assessment instructions)
+
 - **Task CRUD:** Create, read, update, and delete tasks
+- **Responsive task list:** Displays all tasks in a clean, responsive layout
+- **Mark as completed:** Toggle task completion with a checkbox
+- **REST API:** Full CRUD endpoints for tasks (`GET`, `POST`, `PUT/PATCH`, `DELETE`)
+- **PostgreSQL database:** Tasks persisted in a relational database
+
+### Additional Features (beyond requirements)
+
+- **Dark/light mode:** Toggle with smooth CSS transitions, persisted via `localStorage`
+- **Stats dashboard:** Total, completed, pending, and overdue task counts at a glance
 - **Priority levels:** Low (green), Medium (yellow), High (red) with color-coded tags
-- **Due dates:** With visual overdue highlighting (red border)
-- **Dark/light mode:** Toggle with smooth CSS transitions, persisted via localStorage
+- **Due dates:** With visual overdue highlighting (red border + overdue badge)
+- **Search & filters:** Search tasks by title or description; filter by priority, completion status; and sort by created date, updated date, due date, priority, or title
+- **Task timestamps:** Each task card shows when it was created or last updated (relative time like "2h ago")
 - **Pagination:** 10 tasks per page with clean pagination controls
-- **Stats dashboard:** Total, completed, pending, and overdue task counts
 - **Weather section:** Search any city to see current conditions, details (humidity, wind, pressure, visibility), sun times, and a 5-day forecast — powered by free OpenWeather APIs
-- **Responsive design:** Works on mobile, tablet, and desktop
+- **Two-column layout:** Tasks on the left, weather sidebar on the right (desktop); stacked on mobile
+- **Description modal:** Click "See more" on long descriptions to view them in a modal
+- **Responsive design:** Fully responsive across mobile, tablet, and desktop
