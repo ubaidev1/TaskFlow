@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Calendar, Check, Pencil, Trash2, Clock, X } from "lucide-react";
-import { formatDate, isOverdue } from "../utils/date.js";
+import { Calendar, Check, Pencil, Trash2, Clock, X, History } from "lucide-react";
+import { formatDate, isOverdue, timeAgo } from "../utils/date.js";
 
 const PRIORITY = {
   low: { color: "#22c55e", label: "Low" },
@@ -146,7 +146,7 @@ export default function TaskCard({ task, onEdit, onDelete, onToggleComplete, isD
             </p>
           )}
 
-          {/* Bottom meta row: date + location + weather (left) + priority badge (right) */}
+          {/* Bottom meta row: date + created/updated (left) + priority badge (right) */}
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 pl-7 sm:pl-8 sm:gap-x-4">
             {task.due_date && (
               <span
@@ -160,6 +160,20 @@ export default function TaskCard({ task, onEdit, onDelete, onToggleComplete, isD
                 {overdue && <span className="font-bold">· Overdue</span>}
               </span>
             )}
+
+            {/* Created / Updated timestamp */}
+            <span
+              className="inline-flex items-center gap-1 text-xs"
+              style={{ color: "var(--text-muted)" }}
+              title={`Created: ${task.created_at ? new Date(task.created_at).toLocaleString() : ""}\nUpdated: ${task.updated_at ? new Date(task.updated_at).toLocaleString() : ""}`}
+            >
+              <History className="h-3.5 w-3.5" />
+              {task.updated_at && task.created_at && task.updated_at !== task.created_at
+                ? `Updated ${timeAgo(task.updated_at)}`
+                : task.created_at
+                  ? `Created ${timeAgo(task.created_at)}`
+                  : null}
+            </span>
 
             {/* Priority badge — pushed to the right */}
             <span
