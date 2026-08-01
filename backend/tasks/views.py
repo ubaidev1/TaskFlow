@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
+from django.db import models
+from django.db.models import F
 from rest_framework.response import Response
 
 from .models import Task
@@ -13,6 +15,46 @@ def task_list(request):
     """List all tasks (paginated) or create a new task."""
     if request.method == "GET":
         queryset = Task.objects.all()
+
+        # Search by title or description
+        search = request.query_params.get("search", "").strip()
+        if search:
+            queryset = queryset.filter(
+                models.Q(title__icontains=search) | models.Q(description__icontains=search)
+            )
+
+        # Filter by priority
+        priority = request.query_params.get("priority", "").strip()
+        if priority in ("low", "medium", "high"):
+            queryset = queryset.filter(priority=priority)
+
+        # Filter by completed status
+        completed = request.query_params.get("completed", "").strip()
+        if completed == "true":
+            queryset = queryset.filter(completed=True)
+        elif completed == "false":
+            queryset = queryset.filter(completed=False)
+
+        # Ordering
+        ordering = request.query_params.get("ordering", "-created_at").strip()
+        valid_orderings = {
+            "created_at", "-created_at",
+            "updated_at", "-updated_at",
+            "due_date", "-due_date",
+            "priority", "-priority",
+            "title", "-title",
+        }
+        if ordering not in valid_orderings:
+            ordering = "-created_at"
+
+        # Handle NULL due dates: push tasks with no due date to the end
+        if ordering == "due_date":
+            queryset = queryset.order_by(F("due_date").asc(nulls_last=True))
+        elif ordering == "-due_date":
+            queryset = queryset.order_by(F("due_date").desc(nulls_last=True))
+        else:
+            queryset = queryset.order_by(ordering)
+
         paginator = PageNumberPagination()
         paginator.page_size = 10
         page = paginator.paginate_queryset(queryset, request)
