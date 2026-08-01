@@ -8,6 +8,7 @@ import TaskForm from "./components/TaskForm.jsx";
 import Pagination from "./components/Pagination.jsx";
 import ConfirmDialog from "./components/ConfirmDialog.jsx";
 import WeatherSection from "./components/WeatherSection.jsx";
+import TaskFilters from "./components/TaskFilters.jsx";
 import { useTheme } from "./hooks/useTheme.js";
 import {
   fetchTasks,
@@ -33,13 +34,19 @@ function App() {
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTask, setDeletingTask] = useState(null);
+  const [filters, setFilters] = useState({
+    search: "",
+    priority: "",
+    completed: "",
+    ordering: "-created_at",
+  });
 
   // loadTasks does NOT set loading=true — that's only for initial load / page change
   // This prevents the page from blinking when doing CRUD operations
-  const loadTasks = useCallback(async (page) => {
+  const loadTasks = useCallback(async (page, currentFilters) => {
     setError(null);
     try {
-      const data = await fetchTasks(page);
+      const data = await fetchTasks(page, currentFilters);
       setTasks(data.results || []);
       setCount(data.count || 0);
       setTotalPages(Math.ceil((data.count || 0) / 10));
@@ -61,11 +68,11 @@ function App() {
     }
   }, []);
 
-  // Only show skeleton loading on initial load and page changes
+  // Reload when page or filters change
   useEffect(() => {
     setLoading(true);
-    loadTasks(currentPage);
-  }, [currentPage, loadTasks]);
+    loadTasks(currentPage, filters);
+  }, [currentPage, filters, loadTasks]);
 
   useEffect(() => {
     loadStats();
@@ -77,14 +84,14 @@ function App() {
     } else {
       await createTask(data);
     }
-    loadTasks(currentPage);
+    loadTasks(currentPage, filters);
     loadStats();
   };
 
   const handleToggleComplete = async (task) => {
     try {
       await updateTask(task.id, { completed: !task.completed });
-      loadTasks(currentPage);
+      loadTasks(currentPage, filters);
       loadStats();
     } catch (err) {
       setError(err.message);
@@ -96,11 +103,16 @@ function App() {
     try {
       await deleteTask(deletingTask.id);
       setDeletingTask(null);
-      loadTasks(currentPage);
+      loadTasks(currentPage, filters);
       loadStats();
     } catch (err) {
       setError(err.message);
     }
+  };
+
+  const handleFiltersChange = (newFilters) => {
+    setFilters(newFilters);
+    setCurrentPage(1);
   };
 
   const openAddForm = () => {
@@ -119,7 +131,7 @@ function App() {
 
       <main className="mx-auto w-full max-w-7xl px-3 py-6 sm:px-6 sm:py-8">
         {/* Two-column layout: tasks left, weather right */}
-        <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-12">
           {/* Left column — Stats + Tasks */}
           <div className="min-w-0 flex-1">
             {/* Stats — aligned with tasks */}
@@ -147,6 +159,11 @@ function App() {
                 <span className="hidden sm:inline">New Task</span>
                 <span className="sm:hidden">Add</span>
               </button>
+            </div>
+
+            {/* Filters + Search */}
+            <div className="mb-3 sm:mb-4">
+              <TaskFilters filters={filters} onFiltersChange={handleFiltersChange} />
             </div>
 
             {/* Error banner */}

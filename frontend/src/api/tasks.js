@@ -17,8 +17,13 @@ async function request(url, options = {}) {
   return data;
 }
 
-export function fetchTasks(page = 1) {
-  return request(`/tasks/?page=${page}`);
+export function fetchTasks(page = 1, filters = {}) {
+  const params = new URLSearchParams({ page: String(page) });
+  if (filters.search) params.set("search", filters.search);
+  if (filters.priority) params.set("priority", filters.priority);
+  if (filters.completed) params.set("completed", filters.completed);
+  if (filters.ordering) params.set("ordering", filters.ordering);
+  return request(`/tasks/?${params.toString()}`);
 }
 
 export function fetchTask(id) {
